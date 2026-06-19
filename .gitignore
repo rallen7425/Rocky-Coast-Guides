@@ -1,0 +1,29 @@
+# Dependencies
+app/node_modules/
+
+# Build output
+app/dist/
+
+# Environment — never commit real credentials
+app/.env
+app/.env.local
+app/.env.*.local
+
+# Supabase local dev
+.supabase/
+
+# Design reference files (saved webpage — not source)
+Design/Images/Map of Rental Cottages - The Cottages at Summer Village_files/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*

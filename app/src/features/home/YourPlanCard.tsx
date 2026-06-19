@@ -14,11 +14,11 @@ export function YourPlanCard() {
     : 'Check-out Sun 10am'
 
   return (
-    <GlassCard className="p-[14px_16px]">
+    <GlassCard className="p-[14px_16px]" style={{ background: 'rgba(8, 18, 36, 0.28)' }}>
       {/* Header */}
       <div className="flex justify-between items-start mb-3">
         <div>
-          <div className="font-body font-semibold uppercase tracking-[0.08em] text-white/55" style={{ fontSize: 9 }}>
+          <div className="font-display font-bold text-white text-[14px]">
             Your Plan
           </div>
           <div className="font-display font-bold text-white text-[17px] leading-tight mt-0.5">

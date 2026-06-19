@@ -5,7 +5,7 @@ import { YourPlanCard } from './YourPlanCard'
 import { WeatherRow } from './WeatherRow'
 import { EventsScroll } from './EventsScroll'
 import { useActiveAlert } from '../../lib/useAlerts'
-import barnPhoto from '../../assets/sv-barn.heic'
+import barnPhoto from '../../assets/sv-barn.jpg'
 
 export function HomePage() {
   const { alert } = useActiveAlert()
@@ -13,9 +13,11 @@ export function HomePage() {
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
       {/* Fixed background */}
-      <div
-        className="fixed inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${barnPhoto})` }}
+      <img
+        src={barnPhoto}
+        alt=""
+        className="fixed inset-0 w-full h-full object-cover object-center z-0"
+        style={{ pointerEvents: 'none' }}
       />
       {/* Gradient overlay */}
       <div className="fixed inset-0 z-0 gradient-overlay" />

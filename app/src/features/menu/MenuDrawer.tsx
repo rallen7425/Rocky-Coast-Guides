@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { X, User, Home, Bell, BookOpen, Wifi, FileText, Phone, AlertTriangle, HelpCircle, Globe, ChevronRight, Building, LogOut, ShieldCheck } from 'lucide-react'
+import { X, User, Home, Bell, BookOpen, Wifi, FileText, Phone, AlertTriangle, HelpCircle, Globe, ChevronRight, Building, LogOut, ShieldCheck, LogIn } from 'lucide-react'
 import { useAuth } from '../../lib/auth'
 
 interface MenuDrawerProps {
@@ -44,13 +44,18 @@ function Divider() {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const { profile, signOut } = useAuth()
+  const { profile, isGuest, signOut } = useAuth()
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
     onClose()
     await signOut()
-    navigate('/login', { replace: true })
+    navigate('/welcome', { replace: true })
+  }
+
+  const handleSignIn = () => {
+    onClose()
+    navigate('/login')
   }
 
   const goTo = (path: string) => {
@@ -76,7 +81,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
         <div className="flex items-center justify-between px-5 py-4" style={{ background: '#103457' }}>
           <div>
             <div className="font-display font-bold text-white text-[18px]">Summer Village Life</div>
-            {profile?.firstName ? (
+            {isGuest ? (
+              <div className="font-body text-[12px] text-white/60 mt-0.5">Browsing as guest</div>
+            ) : profile?.firstName ? (
               <div className="font-body text-[12px] text-white/60 mt-0.5">Welcome, {profile.firstName}</div>
             ) : (
               <div className="font-body text-[12px] text-white/60 mt-0.5">The Cottages at Summer Village</div>
@@ -87,12 +94,31 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           </button>
         </div>
 
-        {/* Profile */}
-        <SectionLabel>Profile</SectionLabel>
-        <Divider />
-        <MenuItem icon={<User size={18} />} label="Profile" />
-        <MenuItem icon={<Home size={18} />} label={profile?.cottageNumber ? `Cottage ${profile.cottageNumber}` : 'Cottage'} />
-        <MenuItem icon={<Bell size={18} />} label="Notifications" />
+        {/* Guest sign-in prompt */}
+        {isGuest ? (
+          <div className="mx-4 mt-4 mb-1 p-4 rounded-2xl" style={{ background: '#f0f6ff', border: '1px solid #d0e4f7' }}>
+            <p className="font-body text-[13px] font-medium text-[#103457] mb-3">
+              Sign in for your personalized experience — save your cottage, check-in dates, and preferences.
+            </p>
+            <button
+              onClick={handleSignIn}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-body font-semibold text-[14px] text-white"
+              style={{ background: '#103457' }}
+            >
+              <LogIn size={15} />
+              Sign In
+            </button>
+          </div>
+        ) : (
+          <>
+            {/* Profile */}
+            <SectionLabel>Profile</SectionLabel>
+            <Divider />
+            <MenuItem icon={<User size={18} />} label="Profile" />
+            <MenuItem icon={<Home size={18} />} label={profile?.cottageNumber ? `Cottage ${profile.cottageNumber}` : 'Cottage'} />
+            <MenuItem icon={<Bell size={18} />} label="Notifications" />
+          </>
+        )}
 
         {/* Renters */}
         <SectionLabel>Renters</SectionLabel>
@@ -132,16 +158,18 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
         <MenuItem icon={<HelpCircle size={18} />} label="FAQ" />
         <MenuItem icon={<Globe size={18} />} label="Community Website" />
 
-        {/* Sign out */}
-        <div className="mt-2 px-5 pb-6">
-          <button
-            onClick={handleSignOut}
-            className="flex items-center gap-2 w-full py-3 font-body text-[14px] text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <LogOut size={16} />
-            Sign Out
-          </button>
-        </div>
+        {/* Sign out (authenticated users only) */}
+        {!isGuest && (
+          <div className="mt-2 px-5 pb-6">
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 w-full py-3 font-body text-[14px] text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <LogOut size={16} />
+              Sign Out
+            </button>
+          </div>
+        )}
       </div>
     </>
   )

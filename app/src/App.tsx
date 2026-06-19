@@ -9,6 +9,7 @@ import { EventsPage } from './features/events/EventsPage'
 import { GuidePage } from './features/guide/GuidePage'
 import { LoginPage } from './features/auth/LoginPage'
 import { OnboardingPage } from './features/auth/OnboardingPage'
+import { SplashPage } from './features/auth/SplashPage'
 import { AdminLayout } from './features/admin/AdminLayout'
 import { AdminDashboard } from './features/admin/AdminDashboard'
 import { AdminAlertsPage } from './features/admin/AdminAlertsPage'
@@ -17,9 +18,9 @@ import { AdminAmenitiesPage } from './features/admin/AdminAmenitiesPage'
 
 function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const { profile } = useAuth()
+  const { profile, isGuest } = useAuth()
 
-  const needsOnboarding = profile && !profile.cottageNumber
+  const needsOnboarding = !isGuest && profile && !profile.cottageNumber
 
   if (needsOnboarding) return <OnboardingPage />
 
@@ -51,9 +52,9 @@ function AdminShell() {
 }
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { session, loading } = useAuth()
+  const { session, isGuest, loading } = useAuth()
   if (loading) return null
-  if (!session) return <Navigate to="/login" replace />
+  if (!session && !isGuest) return <Navigate to="/welcome" replace />
   return <>{children}</>
 }
 
@@ -65,7 +66,7 @@ function RequireAdmin({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { session, loading } = useAuth()
+  const { session, isGuest, loading } = useAuth()
 
   if (loading) {
     return (
@@ -77,6 +78,7 @@ export default function App() {
 
   return (
     <Routes>
+      <Route path="/welcome" element={(session || isGuest) ? <Navigate to="/" replace /> : <SplashPage />} />
       <Route path="/login" element={session ? <Navigate to="/" replace /> : <LoginPage />} />
 
       <Route path="/admin/*" element={

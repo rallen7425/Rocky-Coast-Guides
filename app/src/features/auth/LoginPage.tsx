@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
-import barnPhoto from '../../assets/sv-barn.heic'
+import barnPhoto from '../../assets/sv-barn.jpg'
 
 export function LoginPage() {
   const { signIn } = useAuth()

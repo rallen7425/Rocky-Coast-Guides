@@ -4,7 +4,7 @@ import { StatusBar } from '../../components/StatusBar'
 import { PageHeader } from '../../components/PageHeader'
 import { SectionLabel } from '../../components/SectionLabel'
 import { RowCard, RowItem, StatusBadge } from '../../components/RowCard'
-import barnPhoto from '../../assets/sv-barn.heic'
+import barnPhoto from '../../assets/sv-barn.jpg'
 import mapThumb from '../../assets/sv-map-thumb.png'
 
 const POOL_GRADIENT = 'linear-gradient(180deg, rgba(8,18,36,0.92) 0%, rgba(8,18,36,0.78) 30%, rgba(8,18,36,0.72) 60%, rgba(8,18,36,0.92) 100%)'

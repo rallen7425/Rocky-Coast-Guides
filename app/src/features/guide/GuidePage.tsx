@@ -3,7 +3,7 @@ import { StatusBar } from '../../components/StatusBar'
 import { PageHeader } from '../../components/PageHeader'
 import { SectionLabel } from '../../components/SectionLabel'
 import { RowCard, RowItem } from '../../components/RowCard'
-import guidePhoto from '../../assets/rocky-coast-guide.heic'
+import guidePhoto from '../../assets/rocky-coast-guide.jpg'
 
 const PAGE_GRADIENT = 'linear-gradient(180deg, rgba(8,18,36,0.92) 0%, rgba(8,18,36,0.78) 30%, rgba(8,18,36,0.72) 60%, rgba(8,18,36,0.92) 100%)'
 

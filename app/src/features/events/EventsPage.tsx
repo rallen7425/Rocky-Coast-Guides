@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { StatusBar } from '../../components/StatusBar'
 import { PageHeader } from '../../components/PageHeader'
 import { SectionLabel } from '../../components/SectionLabel'
-import barnPhoto from '../../assets/sv-barn.heic'
+import barnPhoto from '../../assets/sv-barn.jpg'
 
 type Filter = 'All' | 'On-Site' | 'Nearby' | 'This Weekend'
 

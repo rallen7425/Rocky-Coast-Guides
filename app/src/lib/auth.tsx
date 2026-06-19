@@ -17,16 +17,21 @@ interface AuthState {
   user: User | null
   profile: UserProfile | null
   loading: boolean
+  isGuest: boolean
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
+  enterGuestMode: () => void
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: Error | null }>
 }
+
+const GUEST_KEY = 'svl_guest_mode'
 
 const AuthContext = createContext<AuthState | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isGuest, setIsGuest] = useState(() => localStorage.getItem(GUEST_KEY) === '1')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -36,6 +41,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
+      // Clear guest mode when a real session starts
+      if (session) {
+        localStorage.removeItem(GUEST_KEY)
+        setIsGuest(false)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -57,7 +67,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signOut = async () => {
+    localStorage.removeItem(GUEST_KEY)
+    setIsGuest(false)
     await supabase.auth.signOut()
+  }
+
+  const enterGuestMode = () => {
+    localStorage.setItem(GUEST_KEY, '1')
+    setIsGuest(true)
   }
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
@@ -73,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, user, profile, loading, signIn, signOut, updateProfile }}>
+    <AuthContext.Provider value={{ session, user, profile, loading, isGuest, signIn, signOut, enterGuestMode, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

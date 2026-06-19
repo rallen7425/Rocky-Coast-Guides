@@ -1,5 +1,60 @@
 # Summer Village Life — Project Brief
 
+---
+
+## 🗂 Session Status (updated 2026-06-19)
+
+### Infrastructure
+
+| Resource | Detail |
+|---|---|
+| **GitHub repo** | `git@github.com:rallen7425/Rocky-Coast-Guides.git` |
+| **Live URL** | https://summer-village-life.vercel.app |
+| **Admin URL** | https://summer-village-life.vercel.app/admin |
+| **Vercel project** | `rick-allen-s-projects / summer-village-life` (ID: `prj_8Y6MvpbBi4Ln0ohgPZrQkQ6b5t0n`) |
+| **Supabase project** | `anlwanoqrixidexfvyfq` → https://anlwanoqrixidexfvyfq.supabase.co |
+| **Supabase access token** | Personal access token (stored locally — do not commit) |
+| **Admin credentials** | `rallen7425@gmail.com` / `Gu!t@r01` (role: admin, email confirmed) |
+
+### What's complete
+
+- ✅ Full app scaffold — Vite 5 + React 18 + TypeScript + Tailwind CSS v3
+- ✅ All 5 screens built and matching HTML prototypes: Home, Village, Events, Guide, Menu drawer
+- ✅ Supabase schema — migrations `001_schema.sql`, `002_rls.sql`, `003_seed.sql` run against live project
+- ✅ Seed data live — 1 alert, 10 events (relative dates), 11 amenities, 4 content pages
+- ✅ Auth — LoginPage, 3-step OnboardingPage, AuthProvider, role-based route guards
+- ✅ Admin console — `/admin` with Dashboard, Alerts, Events, Amenities CRUD (role-guarded)
+- ✅ PWA — service worker, web manifest, offline caching via Workbox
+- ✅ Deployed to Vercel production
+- ✅ Supabase env vars set on Vercel (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
+- ✅ Admin user created in Supabase Auth with `role: admin` in user_metadata
+
+### Known issues / next session must address
+
+1. **Login not confirmed working in-browser** — The admin account exists and Supabase auth responds correctly at the API level, but the user reported "no accounts created" on the first attempt. After a forced rebuild (to ensure Supabase URL was baked into the Vite bundle), the URL was confirmed in the bundle. **First thing next session: verify login works at https://summer-village-life.vercel.app.**
+
+2. **GitHub auto-deploys will fail** — Vercel's `rootDirectory` project setting was toggled during this session and is currently `null`. When Vercel builds from GitHub it clones the whole repo and builds from the root, which has no `package.json` for the app (it lives in `app/`). Fix: add a `vercel.json` at the repo root OR set `rootDirectory: app` in the Vercel project settings and always deploy via `git push` rather than CLI. **Until this is fixed, deploy manually via CLI from the `app/` directory: `cd app && vercel --prod`.**
+
+3. **Weather data is static** — The `weather_cache` table exists but is always empty. The Home screen WeatherRow shows placeholder/hardcoded data. Requires a Supabase Edge Function on a cron schedule to fetch real weather + tide data. Not yet built.
+
+4. **Content pages not built** — Menu items (Arrival Guide, Renter's Guide, WiFi, Property Rules, FAQ) are listed but tap targets do nothing. The `content_pages` table is seeded but there are no detail screens.
+
+### Vercel deployment notes (CLI)
+
+The app lives in the `app/` subdirectory of the repo. Always deploy from there:
+
+```bash
+cd "/Users/rallen/Documents/Claude/Projects/Rocky Coast Guide/Rocky Coast Guide/app"
+vercel --prod          # normal deploy (uses build cache)
+vercel --prod --force  # force full rebuild (use when env vars change)
+```
+
+The `.vercel/project.json` is inside `app/` and points to project ID `prj_8Y6MvpbBi4Ln0ohgPZrQkQ6b5t0n`.
+
+Node version constraint: **Node v20.10.0** — use `vite@5` (not v6+), and be aware some packages warn about engine mismatch (safe to ignore).
+
+---
+
 ## Product Overview
 
 **Summer Village Life** is a mobile-first PWA (Progressive Web App) for guests and owners at The Cottages at Summer Village, a 65-acre gated 3-season resort community at 454 Post Road (Route 1), Wells, Maine 04090.

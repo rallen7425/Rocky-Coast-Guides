@@ -25,23 +25,28 @@
 - ✅ Auth — LoginPage, 3-step OnboardingPage, AuthProvider, role-based route guards
 - ✅ Admin console — `/admin` with Dashboard, Alerts, Events, Amenities CRUD (role-guarded)
 - ✅ PWA — service worker, web manifest, offline caching via Workbox
-- ✅ Deployed to Vercel production
+- ✅ Deployed to Vercel production (commit `b52aef8`, latest deploy `dpl_2BvGhFVFySE3rN6oGMLoxfTV3paN`)
 - ✅ Supabase env vars set on Vercel (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`)
 - ✅ Admin user created in Supabase Auth with `role: admin` in user_metadata
+- ✅ SplashPage — barn background, "Welcome to Summer Village", Sign In + Continue as Guest buttons
+- ✅ Guest mode — `isGuest` flag in auth context, persisted in `localStorage` (`svl_guest_mode`); guests skip onboarding, see Sign In prompt in menu drawer; cleared on real sign-in
+- ✅ HEIC → JPEG conversion — all images converted for Chrome compatibility (`sv-barn.jpg`, `rocky-coast-guide.jpg`); all imports updated across the app
+- ✅ Home screen gradient tuned — barn photo visible across full page (max 0.58 overlay), not blacked out at bottom
+- ✅ YourPlanCard visual polish — heading matched to "Events & Activities" (14px font-display bold); background adjusted (`rgba(8,18,36,0.28)`) to visually match WeatherRow despite sitting higher in the gradient
 
 ### Known issues / next session must address
 
-1. **Login not confirmed working in-browser** — The admin account exists and Supabase auth responds correctly at the API level, but the user reported "no accounts created" on the first attempt. After a forced rebuild (to ensure Supabase URL was baked into the Vite bundle), the URL was confirmed in the bundle. **First thing next session: verify login works at https://summer-village-life.vercel.app.**
+1. **GitHub auto-deploys will fail** — Vercel's `rootDirectory` is `null`. Pushes to `main` build from repo root (no `package.json` there) and fail. **Always deploy manually via CLI from `app/`:** `cd app && vercel --prod`. Fix properly by adding a `vercel.json` at the repo root pointing builds to `app/`.
 
-2. **GitHub auto-deploys will fail** — Vercel's `rootDirectory` project setting was toggled during this session and is currently `null`. When Vercel builds from GitHub it clones the whole repo and builds from the root, which has no `package.json` for the app (it lives in `app/`). Fix: add a `vercel.json` at the repo root OR set `rootDirectory: app` in the Vercel project settings and always deploy via `git push` rather than CLI. **Until this is fixed, deploy manually via CLI from the `app/` directory: `cd app && vercel --prod`.**
+2. **Login flow not end-to-end tested on live site** — Supabase auth works at API level and the bundle contains the correct URL. But the full sign-in → onboarding → home flow hasn't been walked through on the live Vercel URL. Do this early next session.
 
-3. **Weather data is static** — The `weather_cache` table exists but is always empty. The Home screen WeatherRow shows placeholder/hardcoded data. Requires a Supabase Edge Function on a cron schedule to fetch real weather + tide data. Not yet built.
+3. **Weather data is static** — `weather_cache` table is always empty. WeatherRow shows hardcoded placeholder data. Needs a Supabase Edge Function on a cron schedule to fetch real weather + tide data.
 
-4. **Content pages not built** — Menu items (Arrival Guide, Renter's Guide, WiFi, Property Rules, FAQ) are listed but tap targets do nothing. The `content_pages` table is seeded but there are no detail screens.
+4. **Content pages not built** — Menu items (Arrival Guide, Renter's Guide, WiFi, Property Rules, FAQ) tap to nothing. `content_pages` table is seeded but no detail screens exist.
 
-### Vercel deployment notes (CLI)
+5. **Splash screen shown to returning signed-in users** — If a user clears `localStorage` but still has a Supabase session cookie, the routing logic needs to be verified. Currently `RequireAuth` redirects to `/welcome` only if `!session && !isGuest`, which should be correct.
 
-The app lives in the `app/` subdirectory of the repo. Always deploy from there:
+### Vercel deployment (CLI — required until GitHub auto-deploy is fixed)
 
 ```bash
 cd "/Users/rallen/Documents/Claude/Projects/Rocky Coast Guide/Rocky Coast Guide/app"
@@ -51,7 +56,9 @@ vercel --prod --force  # force full rebuild (use when env vars change)
 
 The `.vercel/project.json` is inside `app/` and points to project ID `prj_8Y6MvpbBi4Ln0ohgPZrQkQ6b5t0n`.
 
-Node version constraint: **Node v20.10.0** — use `vite@5` (not v6+), and be aware some packages warn about engine mismatch (safe to ignore).
+**Important:** Never put the Supabase personal access token or any secret in this file — GitHub push protection will block the push.
+
+Node version constraint: **Node v20.10.0** — use `vite@5` (not v6+).
 
 ---
 

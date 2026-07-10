@@ -14,7 +14,7 @@
 | **Vercel project** | `rick-allen-s-projects / summer-village-life` (ID: `prj_8Y6MvpbBi4Ln0ohgPZrQkQ6b5t0n`) |
 | **Supabase project** | `anlwanoqrixidexfvyfq` → https://anlwanoqrixidexfvyfq.supabase.co |
 | **Supabase access token** | Personal access token (stored locally — do not commit) |
-| **Admin credentials** | `rallen7425@gmail.com` / `Gu!t@r01` (role: admin, email confirmed) |
+| **Admin credentials** | `rallen7425@gmail.com` (role: admin, email confirmed) — password stored in password manager, not in this file |
 
 ### What's complete
 

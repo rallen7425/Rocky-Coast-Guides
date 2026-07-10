@@ -12,9 +12,11 @@
 | **Live URL** | https://summer-village-life.vercel.app |
 | **Admin URL** | https://summer-village-life.vercel.app/admin |
 | **Vercel project** | `rick-allen-s-projects / summer-village-life` (ID: `prj_8Y6MvpbBi4Ln0ohgPZrQkQ6b5t0n`) |
-| **Supabase project** | `anlwanoqrixidexfvyfq` → https://anlwanoqrixidexfvyfq.supabase.co |
+| **Supabase project** | `rocky-coast-labs` (ref `kywdezqgrtpzuecxxvfc`) — shared project, schema `village_summer` |
 | **Supabase access token** | Personal access token (stored locally — do not commit) |
 | **Admin credentials** | `rallen7425@gmail.com` (role: admin, email confirmed) — password stored in password manager, not in this file |
+
+**Migration note (2026-07-10):** Moved from a standalone Supabase project (`anlwanoqrixidexfvyfq`, kept paused as a dormant backup) into the shared `rocky-coast-labs` project's `village_summer` schema, alongside the rest of the Rocky Coast Labs portfolio. `src/lib/supabase.ts` now passes `db: { schema: 'village_summer' }` to `createClient` — don't remove that or queries silently hit (nonexistent) `public.*`. Data migrated as-is (1 alert, 10 events, 11 amenities, 4 content pages, 1 weather_cache row); the admin auth account was **not** migrated (no real end users existed) — the admin login above needs to be recreated fresh on the new project before the `/admin` console will work again. A Turborepo scaffold for the wider Rocky Coast Guide app family exists at `../../rocky-coast-labs/apps/summer-village` (see that repo's `ARCHITECTURE.md`), but this standalone repo is still what's actually deployed — the monorepo migration (shared code extraction, Vercel repoint) hasn't happened yet.
 
 ### What's complete
 

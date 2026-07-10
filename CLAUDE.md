@@ -4,7 +4,7 @@
 
 ## 🗂 Session Status (updated 2026-07-10)
 
-**2026-07-10:** Migrated onto the shared `rocky-coast-labs` Supabase project (`village_summer` schema) as part of a portfolio-wide infra consolidation — see the Infrastructure table below and `rocky-coast-labs/ARCHITECTURE.md` for full detail. Verified in production: guest mode (real alert + events data), and admin sign-in → `/admin` console (fresh admin account, since the old one wasn't migrated). **Not yet verified:** the regular renter sign-in → onboarding → home flow (item 2 below) — today's testing covered guest mode and admin only, not a full renter account.
+**2026-07-10:** Migrated onto the shared `rocky-coast-labs` Supabase project (`village_summer` schema) as part of a portfolio-wide infra consolidation — see the Infrastructure table below and `rocky-coast-labs/ARCHITECTURE.md` for full detail. Verified in production, end to end: guest mode (real alert + events data), admin sign-in → `/admin` console, AND the full renter flow — sign in → 3-step onboarding (name, cottage number, check-in/out dates) → Home/Village/Events/Guide all rendering real data, with the entered name and cottage number correctly reflected ("Welcome, Rick" / "Cottage 42"). This resolves the long-standing "onboarding never tested end-to-end" item below — no issues found.
 
 ### Infrastructure
 
@@ -42,7 +42,7 @@
 
 1. **GitHub auto-deploys will fail** — Vercel's `rootDirectory` is `null`. Pushes to `main` build from repo root (no `package.json` there) and fail. **Always deploy manually via CLI from `app/`:** `cd app && vercel --prod`. Fix properly by adding a `vercel.json` at the repo root pointing builds to `app/`.
 
-2. **Regular renter login flow still not end-to-end tested on live site** — admin sign-in and guest mode ARE now verified working on production (2026-07-10, against the new shared Supabase project). But the full renter sign-in → onboarding → home flow (a non-admin account) still hasn't been walked through on the live Vercel URL. Do this early next session.
+2. ~~Regular renter login flow not end-to-end tested~~ — **RESOLVED 2026-07-10.** Full sign-in → onboarding → home flow verified working on production against the new shared Supabase project, no issues found.
 
 3. **Weather data is static** — `weather_cache` table is always empty. WeatherRow shows hardcoded placeholder data. Needs a Supabase Edge Function on a cron schedule to fetch real weather + tide data.
 
